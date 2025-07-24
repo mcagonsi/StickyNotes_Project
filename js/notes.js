@@ -1,3 +1,4 @@
+
 /**
  * notes.js - Note class definition and management
  * Contains the Note class and related functions for note manipulation
@@ -5,7 +6,7 @@
 
 // Array of note colors
 const NOTE_COLORS = ['note-yellow', 'note-blue', 'note-green', 'note-pink'];
-
+import { parseNoteIdToDate } from "./utils.js";
 /**
  * Represents a single note on the board
  */
@@ -33,6 +34,7 @@ export class Note {
      * @returns {string} Unique ID
      */
     generateId() {
+        console.log(Date.now())
         return 'note_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     }
 
@@ -58,6 +60,11 @@ export class Note {
         noteElement.classList.add(this.color);
         noteElement.style.left = `${this.x}px`;
         noteElement.style.top = `${this.y}px`;
+
+        //show timestamp
+        const timestampElement = noteElement.querySelector('#timestamp');
+        const date = parseNoteIdToDate(this.id);
+        timestampElement.textContent = date.toLocaleString();
         
         // Set content
         const contentElement = noteElement.querySelector('.note-content');
