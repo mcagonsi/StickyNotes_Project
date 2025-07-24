@@ -197,6 +197,74 @@ export class NoteManager {
     toJSON() {
         return this.getAllNotes().map(note => note.toObject());
     }
+
+    /**
+     * Handles sorting notes in ascending order and updating the display coordinates
+     */
+    sortAscending() {
+       // Sort by the timestamp extracted from the note's ID for reliability
+       const sortedNotes = Array.from(this.notes.values()).sort((a, b) => {
+        return parseNoteIdToDate(a.id) - parseNoteIdToDate(b.id);
+        
+        });
+
+        // Calculate maximum notes per row based on viewport width
+        const noteWidth = 220; // 200px note + 20px spacing
+        const boardPadding = 80; // 40px padding on each side
+        const maxWidth = window.innerWidth - boardPadding;
+        const notesPerRow = Math.floor(maxWidth / noteWidth);
+
+        // Arrange notes in a grid layout
+        sortedNotes.forEach((note, i) => {
+            const row = Math.floor(i / notesPerRow);
+            const col = i % notesPerRow;
+        
+            note.x = 40 + col * noteWidth;
+            note.y = 40 + row * 220; // 220px vertical spacing
+        
+            if (note.element) {
+                note.updatePosition(note.x, note.y);
+            }
+        });
+
+        this.notes = new Map(sortedNotes.map(note => [note.id, note]));
+    }
+        
+        
+    /**
+     * Handles sorting notes in descending order and updating the display coordinates
+     */
+    sortDescending() {
+        // Sort by the timestamp extracted from the note's ID for reliability
+        const sortedNotes = Array.from(this.notes.values()).sort((a, b) => {
+            return parseNoteIdToDate(b.id) - parseNoteIdToDate(a.id);
+            
+        });
+    
+        // Calculate maximum notes per row based on viewport width
+        const noteWidth = 220; // 200px note + 20px spacing
+        const boardPadding = 80; // 40px padding on each side
+        const maxWidth = window.innerWidth - boardPadding;
+        const notesPerRow = Math.floor(maxWidth / noteWidth);
+    
+        // Arrange notes in a grid layout
+        sortedNotes.forEach((note, i) => {
+            const row = Math.floor(i / notesPerRow);
+            const col = i % notesPerRow;
+        
+            note.x = 40 + col * noteWidth;
+            note.y = 40 + row * 220; // 220px vertical spacing
+        
+            if (note.element) {
+                note.updatePosition(note.x, note.y);
+            }
+        });
+    
+        this.notes = new Map(sortedNotes.map(note => [note.id, note]));
+    
+    }
+    
+
 }
 
 // Export a factory function for creating a new note

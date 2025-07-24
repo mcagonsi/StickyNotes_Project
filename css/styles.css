@@ -95,11 +95,15 @@ header {
 }
 
 #note-board {
-    flex-grow: 1;
+    display: flex;
+    flex-wrap: fle;
+    align-items: flex-start;
+    max-width: 100dvw;
     padding: 2rem;
     position: relative;
     overflow: auto;
     min-height: 80vh;
+    gap: 1rem;
 }
 
 /* Note styling */
