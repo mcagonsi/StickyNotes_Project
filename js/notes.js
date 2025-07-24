@@ -19,6 +19,7 @@ export class Note {
      * @param {number} options.x - X position on the board
      * @param {number} options.y - Y position on the board
      * @param {string} options.color - CSS class for note color
+     * @param {string} options.timestamp - time of creation
      */
     constructor({ id = null, content = '', x = 0, y = 0, color = null }) {
         this.id = id || this.generateId();
@@ -27,6 +28,7 @@ export class Note {
         this.y = y;
         this.color = color || this.getRandomColor();
         this.element = null;
+        this.timestamp = parseNoteIdToDate(this.id).toLocaleString()
     }
 
     /**
@@ -34,7 +36,6 @@ export class Note {
      * @returns {string} Unique ID
      */
     generateId() {
-        console.log(Date.now())
         return 'note_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     }
 
@@ -63,8 +64,7 @@ export class Note {
 
         //show timestamp
         const timestampElement = noteElement.querySelector('#timestamp');
-        const date = parseNoteIdToDate(this.id);
-        timestampElement.textContent = date.toLocaleString();
+        timestampElement.textContent = this.timestamp
         
         // Set content
         const contentElement = noteElement.querySelector('.note-content');
@@ -113,7 +113,8 @@ export class Note {
             content: this.content,
             x: this.x,
             y: this.y,
-            color: this.color
+            color: this.color,
+            timestamp: this.timestamp
         };
     }
 
@@ -131,7 +132,6 @@ export class Note {
             }
             
             const data = await response.json();
-            console.log(data)
             const quote = `"${data.content}" — ${data.author}`;
             
             // Add the quote to the current content
