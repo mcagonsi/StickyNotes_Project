@@ -26,10 +26,15 @@
     <template id="note-template">
         <div class="note" tabindex="0">
             <div class="note-header">
+                <button class="note-image-btn" title="Attach image" type="button" style="position: relative; overflow: hidden;">
+                    <span role="img" aria-label="Attach image">📎</span>
+                    <input id="note-img" type="file" accept="image/*" class="note-image-input" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;">
+                </button>
                 <button class="quote-btn" title="Add inspirational quote">💡</button>
                 <button class="delete-btn" title="Delete note">🗑️</button>
             </div>
             
+            <div class="note-img"><img id="note-img-display" src="" alt="Note image"/></div>
             <div class="note-content" contenteditable="true"></div>
             <div class='created' id="timestamp"></div>
         </div>

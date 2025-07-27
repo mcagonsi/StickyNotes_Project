@@ -96,10 +96,51 @@ export function setupNoteEventListeners(noteElement, note, noteManager) {
     const contentElement = noteElement.querySelector('.note-content');
     const deleteButton = noteElement.querySelector('.delete-btn');
     const quoteButton = noteElement.querySelector('.quote-btn');
+    const noteImgInput = noteElement.querySelector('#note-img');
     
     // Track whether the note is being dragged
     let isDragging = false;
     let dragOffsetX, dragOffsetY;
+
+    // Image content
+    noteImgInput.addEventListener('change', () => {
+        const file = noteImgInput.files[0];
+        if (file) {
+            // Check file size (limit to 2MB)
+            const maxSize = 2 * 1024 * 1024; // 2MB
+            if (file.size > maxSize) {
+                alert('Image size too large. Please select an image smaller than 2MB.');
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file.');
+                return;
+            }
+            
+            // Show loading state
+            const imageBtn = noteElement.querySelector('.note-image-btn');
+            imageBtn.classList.add('loading');
+            
+            // Read file as base64
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                note.updateImage(base64Data);
+                
+                // Remove loading state
+                imageBtn.classList.remove('loading');
+            };
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                imageBtn.classList.remove('loading');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    
     
     // Content change handler
     contentElement.addEventListener('input', () => {

@@ -15,14 +15,16 @@ export class Note {
      * Create a new note
      * @param {Object} options - Note initialization options
      * @param {string} options.id - Unique identifier for the note
+     * @param {file} options.image - Selected image to be attached to notes
      * @param {string} options.content - Text content of the note
      * @param {number} options.x - X position on the board
      * @param {number} options.y - Y position on the board
      * @param {string} options.color - CSS class for note color
      * @param {string} options.timestamp - time of creation
      */
-    constructor({ id = null, content = '', x = 0, y = 0, color = null }) {
+    constructor({ id = null,image=null, content = '', x = 0, y = 0, color = null }) {
         this.id = id || this.generateId();
+        this.image = image;
         this.content = content;
         this.x = x;
         this.y = y;
@@ -61,6 +63,17 @@ export class Note {
         noteElement.classList.add(this.color);
         noteElement.style.left = `${this.x}px`;
         noteElement.style.top = `${this.y}px`;
+
+        // Handle image display
+        const noteImgContainer = noteElement.querySelector('.note-img');
+        const noteImg = noteElement.querySelector('#note-img-display');
+        
+        if (this.image) {
+            noteImg.src = this.image;
+            noteImgContainer.classList.add('has-image');
+        } else {
+            noteImgContainer.classList.remove('has-image');
+        }
 
         //show timestamp
         const timestampElement = noteElement.querySelector('#timestamp');
@@ -104,12 +117,34 @@ export class Note {
     }
 
     /**
+     * Update the note's image
+     * @param {string} imageData - Base64 image data or URL
+     */
+    updateImage(imageData) {
+        this.image = imageData;
+        
+        if (this.element) {
+            const noteImgContainer = this.element.querySelector('.note-img');
+            const noteImg = this.element.querySelector('#note-img-display');
+            
+            if (imageData) {
+                noteImg.src = imageData;
+                noteImgContainer.classList.add('has-image');
+            } else {
+                noteImg.src = '';
+                noteImgContainer.classList.remove('has-image');
+            }
+        }
+    }
+
+    /**
      * Convert note to plain object for storage
      * @returns {Object} Plain object representation of the note
      */
     toObject() {
         return {
             id: this.id,
+            image: this.image,
             content: this.content,
             x: this.x,
             y: this.y,
